@@ -1,0 +1,7 @@
+type=cloudflare
+login=
+password=
+zone=domain.com
+domains=domain.com,sub.domain.com,sub2.domain.com
+record_type=A
+proxied=true

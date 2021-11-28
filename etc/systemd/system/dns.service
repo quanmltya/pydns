@@ -1,0 +1,15 @@
+[Unit] 
+Description = DNS Update script
+After = network.target 
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/services/dns
+Environment=PYTHONUNBUFFERED=1
+ExecStart = python3 -u /opt/services/dns/dns_update.py
+#ExecStart = /bin/sh -c 'exec /opt/services/dns/dns_update.sh'
+Restart = on-failure
+User=dns
+
+[Install]
+WantedBy = multi-user.target

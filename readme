@@ -1,0 +1,30 @@
+Python script to do the automatically dns update.
+Currently support Google and cloudflare. Any support is welcome!
+
+Usage: python dns_update.py
+
+Configurations:
+Main configuration: config.properties
+Format:
+interval=900
+ip_web=https://api.ipify.org
+
+interval: The interval between update in second, min value: 60 (seconds), default value if not present: 900 (seconds)
+ip_web: The website to get the public ip address
+
+Host configuration: any file in the same folder with the main script which ends with .host. For example google_mydomain.com.host.
+Format:
+type=cloudflare
+login=Login
+password=Password
+zone=mydomain.com
+domains=mydomain.com,sub1.mydomain.com...
+record_type=A
+proxied=true
+
+type: can be google or cloudflare. To indicate the destination service
+login and password: credentials
+zone: For cloudflare
+domains: List of domains to be updated. Separated by comma
+record_type: For cloudflare. A or AAAA.
+proxied: For cloudflare. true of false.
