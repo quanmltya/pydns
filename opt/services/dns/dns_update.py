@@ -212,12 +212,17 @@ class UpdateDns:
                 
             # Schedule the next running
             time.sleep(self.interval)
-            self.update()
+            # self.update() # Stack overflow
         except:
             print('The ip could not be got')
             # Schedule the next running
             time.sleep(self.MIN_INTERVAL)
+            # self.update() # Stack overflow
+
+
+    def start(self):
+        while True:
             self.update()
-        
-        
-UpdateDns(os.getcwd()).update()
+
+
+UpdateDns(os.getcwd()).start()
