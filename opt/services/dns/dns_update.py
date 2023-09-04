@@ -5,6 +5,7 @@ import os
 import threading
 import glob
 import time
+from threading import Thread
 #import pathlib
 
 
@@ -222,7 +223,9 @@ class UpdateDns:
 
     def start(self):
         while True:
-            self.update()
+            thread = Thread(target = self.update, args = [])
+            thread.start()
+            thread.join()
 
 
 UpdateDns(os.getcwd()).start()
