@@ -44,9 +44,11 @@ class UpdateDns:
         try:
             IP_API = 'https://api.ipify.org?format=json'
 
-            resp = requests.get(IP_API)
+            resp = requests.get(IP_API, timeout=10)
             ip = resp.json()['ip']
             print("Got ip: {}".format(ip))
+            if not ip:
+              raise Exception("Invalid IP")
 
             props = self.load_properties('{}/config.properties'.format(self.parent_path))
             if 'interval' in props:
@@ -90,9 +92,9 @@ class UpdateDns:
                                 domain = domains[j].strip()
                                 if cache.get(hostType).get(domain) == ip:
                                     print('[{}] Domain: {}, ip {} does not change!'.format(hostType, domain, ip))
-                                    break
+                                    continue
                                 endpoint = 'https://{}:{}@domains.google.com/nic/update?hostname={}&myip={}'.format(login, password, domain, ip)
-                                response = requests.post(endpoint)
+                                response = requests.post(endpoint, timeout=20)
                                 output = response.content.decode('utf-8')
                                 if 'good' in output or 'nochg' in output:
                                     print('[{}], {} points to {}'.format(hostType, domain, ip))
@@ -121,7 +123,8 @@ class UpdateDns:
                                     headers={
                                         'X-Auth-Key': password,
                                         'X-Auth-Email': login
-                                    }).json()
+                                    },
+                                    timeout=20).json()
                                 if response.get('success') == True:
                                     # Find zone id
                                     zone_found = False
@@ -140,7 +143,8 @@ class UpdateDns:
                                                     'X-Auth-Key': password,
                                                     'X-Auth-Email': login
                                                 },
-                                                params=params).json()
+                                                params=params,
+                                                timeout=20).json()
                                             if response.get('success') == True:
                                                 #print('res: ', response)
                                                 for j in range(len(domains)):
@@ -174,7 +178,8 @@ class UpdateDns:
                                                                     'X-Auth-Key': password,
                                                                     'X-Auth-Email': login,
                                                                     'Content-Type': 'application/json'
-                                                                }).json()
+                                                                },
+                                                                timeout=20).json()
                                                                 
                                                             if update_response.get('success') == True:
                                                                 print('[{}], {} points to {}'.format(zone, domain, ip))
